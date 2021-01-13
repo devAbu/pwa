@@ -34,26 +34,28 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  /* console.log("sw fetch event", e); */
-  //cache
-  e.respondWith(
-    caches
-      .match(e.request)
-      .then((staticRes) => {
-        return (
-          staticRes ||
-          fetch(e.request).then((dynamicRes) => {
-            // ima problem sa imenom cache-a
-            return caches.open(dynamicCache).then((cache) => {
-              cache.put(e.request.url, dynamicRes.clone());
-              limitNumCache(dynamicCache, 2);
-              return dynamicRes;
-            });
-          })
-        );
-      })
-      .catch(() => caches.match("/pages/fallback.html"))
-  );
+  if (e.request.url.indexOf("firestore.googleapis.com") === -1) {
+    /* console.log("sw fetch event", e); */
+    //cache
+    e.respondWith(
+      caches
+        .match(e.request)
+        .then((staticRes) => {
+          return (
+            staticRes ||
+            fetch(e.request).then((dynamicRes) => {
+              // ima problem sa imenom cache-a
+              return caches.open(dynamicCache).then((cache) => {
+                cache.put(e.request.url, dynamicRes.clone());
+                limitNumCache(dynamicCache, 3);
+                return dynamicRes;
+              });
+            })
+          );
+        })
+        .catch(() => caches.match("/pages/fallback.html"))
+    );
+  }
 });
 
 /*
