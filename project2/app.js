@@ -17,7 +17,21 @@ function createPost(post) {
   });
 }
 
-createPost({ title: "post3" })
+async function createPosts() {
+  try {
+    await createPost({ title: "post3" });
+    await createPost({ title: "post4" });
+    await createPost({ title: "post5" });
+  } catch (error) {
+    console.log(error);
+  }
+
+  console.log(posts);
+}
+
+createPosts();
+
+/* createPost({ title: "post3" })
   .then((data) => createPost({ title: "post4" }))
   .then((data) => createPost({ title: "post5" }))
   .catch((err) => {
@@ -26,14 +40,14 @@ createPost({ title: "post3" })
   .finally(() => {
     console.log(posts);
     console.log("settled");
-  });
+  }); */
 
 // Promise all
 
-Promise.all([createPost({ title: "post6" }), createPost({ title: "post7" })])
+/* Promise.all([createPost({ title: "post6" }), createPost({ title: "post7" })])
   .then(() => {
     console.log("all posts", posts);
   })
   .catch((err) => {
     console.log(err);
-  });
+  }); */
